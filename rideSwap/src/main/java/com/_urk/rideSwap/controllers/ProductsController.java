@@ -2,7 +2,7 @@ package com._urk.rideSwap.controllers;
 
 import com._urk.rideSwap.models.Product;
 import com._urk.rideSwap.models.ProductDto;
-import com._urk.rideSwap.services.ProductsRepository;
+import com._urk.rideSwap.repository.ProductsRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -34,13 +34,24 @@ public class ProductsController {
         model.addAttribute("products", products);
         return "products/index";
     }
-
+    @GetMapping("/owner-dashboard")
+    public String showOwnerDashboard(Model model, @RequestParam int ownerId) {
+        List<Product> products = repo.findByOwnerId(ownerId, Sort.by(Sort.Direction.DESC, "id"));
+        model.addAttribute("products", products);
+        return "products/owner-dashboard";
+    }
 
     @GetMapping("/create")
     public String showCreatePage(Model model) {
         ProductDto productDto = new ProductDto();
         model.addAttribute("productDto", productDto);
         return "products/CreateProduct";
+    }
+    @GetMapping("/shop")
+    public String showShopPage(Model model) {
+        List<Product> products = repo.findAll(Sort.by(Sort.Direction.DESC, "id"));
+        model.addAttribute("products", products);
+        return "products/shop";
     }
 
 
